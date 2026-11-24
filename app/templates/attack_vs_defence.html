@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Live statistics from local authentication defense simulations.">
+    <title>Attack vs defence | SECURECORE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="auth-page dashboard-page">
+    <main class="dashboard-shell" data-dashboard
+          data-endpoint="{{ dashboard_url }}">
+        <a class="brand dashboard-brand-link" href="{{ url_for('main.home') }}"
+           aria-label="SECURECORE home">
+            <span class="brand-mark" aria-hidden="true">S</span>
+            <span>SECURE<span class="brand-accent">CORE</span></span>
+        </a>
+
+        <header class="attack-dashboard-header">
+            <div>
+                <div class="auth-kicker"><span class="status-dot" aria-hidden="true"></span> LOCAL SIMULATION DATA</div>
+                <h1>Attack <span class="attack-text">vs</span> defence</h1>
+                <p>Outcomes recorded by the isolated, synthetic authentication simulator.</p>
+            </div>
+            <div class="dashboard-actions">
+                <label class="dashboard-filter" for="scenario-filter">
+                    Scenario
+                    <select id="scenario-filter" data-scenario-filter>
+                        <option value="all">All scenarios</option>
+                        {% for scenario, label in scenarios.items() %}
+                            <option value="{{ scenario }}">{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+                <a class="button button-primary dashboard-run-link"
+                   href="{{ url_for('main.brute_force_simulator') }}">Run simulation</a>
+            </div>
+        </header>
+
+        <p class="dashboard-status" data-dashboard-status role="status" aria-live="polite">
+            Loading simulation statistics…
+        </p>
+
+        <section class="dashboard-stat-grid" aria-label="Simulation overview">
+            <article class="dashboard-stat-card attack-stat">
+                <span>Total simulated attempts</span>
+                <strong data-stat="total_attacks">0</strong>
+                <small>Recorded mock authentication attempts</small>
+            </article>
+            <article class="dashboard-stat-card attack-stat">
+                <span>Failed password guesses</span>
+                <strong data-stat="failed_password_guesses">0</strong>
+                <small>Rejected synthetic guesses</small>
+            </article>
+            <article class="dashboard-stat-card defence-stat">
+                <span>Blocked attempts</span>
+                <strong data-stat="blocked_attempts">0</strong>
+                <small>Stopped by mock rate limit or lockout</small>
+            </article>
+            <article class="dashboard-stat-card attack-stat">
+                <span>Successful password guesses</span>
+                <strong data-stat="successful_simulated_guesses">0</strong>
+                <small>Includes guesses held at the MFA step</small>
+            </article>
+            <article class="dashboard-stat-card defence-stat">
+                <span>Defence success</span>
+                <strong data-stat="defence_success_percent">N/A</strong>
+                <small data-stat-detail="defence">No attempts in this selection</small>
+            </article>
+        </section>
+
+        <section class="dashboard-protection-grid" aria-label="Protection effectiveness">
+            <article class="dashboard-panel protection-panel">
+                <div class="dashboard-panel-heading">
+                    <div>
+                        <span class="dashboard-overline">RATE LIMITING</span>
+                        <h2>Request throttling</h2>
+                    </div>
+                    <strong class="defence-value" data-stat="rate_limiting_effectiveness_percent">N/A</strong>
+                </div>
+                <p><span data-stat="rate_limit_blocks">0</span> blocked out of
+                   <span data-stat="rate_limited_attempts">0</span> rate-limited scenario attempts.</p>
+            </article>
+            <article class="dashboard-panel protection-panel">
+                <div class="dashboard-panel-heading">
+                    <div>
+                        <span class="dashboard-overline">ACCOUNT LOCKOUT</span>
+                        <h2>Repeated failure control</h2>
+                    </div>
+                    <strong class="defence-value" data-stat="account_lockout_effectiveness_percent">N/A</strong>
+                </div>
+                <p><span data-stat="lockout_blocks">0</span> blocked out of
+                   <span data-stat="lockout_attempts">0</span> lockout scenario attempts.</p>
+            </article>
+            <article class="dashboard-panel protection-panel mfa-panel">
+                <div class="dashboard-panel-heading">
+                    <div>
+                        <span class="dashboard-overline">MULTI-FACTOR AUTHENTICATION</span>
+                        <h2>Password is not enough</h2>
+                    </div>
+                    <strong class="defence-value" data-stat="mfa_protection_percent">N/A</strong>
+                </div>
+                <p><span data-stat="mfa_challenges">0</span> password match(es) held for MFA;
+                   <span data-stat="mfa_completed_logins">0</span> mock login(s) completed.</p>
+                <small>Based on <span data-stat="mfa_password_matches">0</span> password match(es)
+                    in the MFA-enabled scenario.</small>
+            </article>
+        </section>
+
+        <section class="dashboard-chart-grid">
+            <article class="dashboard-panel chart-panel">
+                <div class="dashboard-panel-heading">
+                    <div>
+                        <span class="dashboard-overline">OUTCOME BREAKDOWN</span>
+                        <h2>Scenario comparison</h2>
+                    </div>
+                </div>
+                <div class="dashboard-legend" aria-label="Chart legend">
+                    <span data-series="failed">Failed</span>
+                    <span data-series="blocked">Blocked</span>
+                    <span data-series="completed">Login completed</span>
+                    <span data-series="mfa_challenges">MFA required</span>
+                </div>
+                <div class="comparison-chart" data-comparison-chart
+                     aria-label="Comparison of recorded outcomes by scenario"></div>
+            </article>
+
+            <article class="dashboard-panel chart-panel timeline-panel">
+                <div class="dashboard-panel-heading">
+                    <div>
+                        <span class="dashboard-overline">LAST 24 HOURS</span>
+                        <h2>Attempt activity</h2>
+                    </div>
+                </div>
+                <div class="dashboard-legend" aria-label="Timeline legend">
+                    <span data-series="failed">Failed</span>
+                    <span data-series="blocked">Blocked</span>
+                    <span data-series="completed">Login completed</span>
+                    <span data-series="mfa_challenges">MFA required</span>
+                </div>
+                <div class="timeline-chart" data-timeline-chart
+                     aria-label="Hourly simulation attempts for the last 24 hours"></div>
+            </article>
+        </section>
+
+        <p class="dashboard-methodology">
+            Defence success counts attempts explicitly blocked by rate limiting or lockout,
+            plus password matches stopped at the MFA step, divided by all recorded attempts.
+            Rate-limit and lockout percentages use attempts in their respective scenarios;
+            MFA protection is the share of MFA-scenario password matches that did not complete login.
+            Percentages show N/A when their denominator is zero. All figures come from simulation records,
+            never real authentication activity.
+        </p>
+        <footer class="dashboard-footer">
+            <span data-dashboard-updated>Waiting for first update</span>
+            <a href="{{ url_for('main.brute_force_simulator') }}">Open the local simulator</a>
+        </footer>
+    </main>
+    <script src="{{ url_for('static', filename='js/attack_vs_defence.js') }}" defer></script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Verify your SECURECORE sign-in with an authenticator code.">
+    <title>Verify sign-in | SECURECORE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="auth-page">
+    <main class="auth-shell mfa-shell">
+        <a class="brand" href="{{ url_for('main.home') }}" aria-label="SECURECORE home">
+            <span class="brand-mark" aria-hidden="true">S</span>
+            <span>SECURE<span class="brand-accent">CORE</span></span>
+        </a>
+        <section class="auth-card" aria-labelledby="mfa-verify-title">
+            <div class="auth-kicker"><span class="status-dot" aria-hidden="true"></span> SECOND-FACTOR CHECK</div>
+            <h1 id="mfa-verify-title">Verify it's you.</h1>
+            <p class="auth-intro">
+                Enter the current six-digit code from your authenticator app to finish signing in.
+            </p>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="auth-messages" role="status" aria-live="polite">
+                        {% for category, message in messages %}
+                            <p class="auth-message auth-message-{{ category }}">{{ message }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            <form class="auth-form" method="post" action="{{ url_for('main.mfa_verify') }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="auth-field">
+                    <label for="otp">Six-digit verification code</label>
+                    <input class="otp-input" id="otp" name="otp" type="text" required
+                           inputmode="numeric" autocomplete="one-time-code"
+                           pattern="[0-9]{6}" minlength="6" maxlength="6" autofocus>
+                </div>
+                <button class="button button-primary auth-submit" type="submit">Verify and continue</button>
+            </form>
+
+            <p class="auth-switch"><a href="{{ url_for('main.login') }}">Restart sign-in</a></p>
+        </section>
+        <a class="auth-home" href="{{ url_for('main.home') }}">Return to SECURECORE</a>
+    </main>
+</body>
+</html>

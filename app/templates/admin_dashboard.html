@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SECURECORE protected administrator dashboard.">
+    <title>Admin dashboard | SECURECORE</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="auth-page admin-dashboard-page">
+    <main class="admin-dashboard-shell">
+        <a class="brand" href="{{ url_for('main.home') }}" aria-label="SECURECORE home">
+            <span class="brand-mark" aria-hidden="true">S</span>
+            <span>SECURE<span class="brand-accent">CORE</span></span>
+        </a>
+        <section class="admin-dashboard-card" aria-labelledby="admin-dashboard-title">
+            <div class="auth-kicker"><span class="status-dot" aria-hidden="true"></span> PROTECTED ADMINISTRATOR AREA</div>
+            <h1 id="admin-dashboard-title">Admin <span>control</span></h1>
+            <p class="auth-intro">Authenticated administrator access is active.</p>
+
+            <nav class="admin-dashboard-links" aria-label="Administrator tools">
+                <a href="{{ url_for('main.experience') }}">
+                    <span><small>SECURITY ROOM</small><strong>Return to 3D Security Room</strong></span>
+                    <span aria-hidden="true">↗</span>
+                </a>
+                <a href="{{ url_for('main.security_monitoring_dashboard') }}">
+                    <span><small>MONITORING</small><strong>Security monitoring</strong></span>
+                    <span aria-hidden="true">↗</span>
+                </a>
+                {% if config.BRUTE_FORCE_SIMULATOR_ENABLED %}
+                    <a href="{{ url_for('main.attack_vs_defence_dashboard') }}">
+                        <span><small>SIMULATION</small><strong>Attack vs defence</strong></span>
+                        <span aria-hidden="true">↗</span>
+                    </a>
+                {% endif %}
+                <a href="{{ url_for('main.dashboard') }}">
+                    <span><small>ACCOUNT</small><strong>Account dashboard</strong></span>
+                    <span aria-hidden="true">↗</span>
+                </a>
+            </nav>
+
+            <form method="post" action="{{ url_for('main.logout') }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button class="button button-primary admin-signout" type="submit">Sign out</button>
+            </form>
+        </section>
+        <a class="admin-home-link" href="{{ url_for('main.home') }}">Return to SECURECORE</a>
+    </main>
+</body>
+</html>

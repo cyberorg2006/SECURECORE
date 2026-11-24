@@ -1,0 +1,116 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Explore the SECURECORE cinematic 3D security room.">
+    <title>SECURECORE | 3D Security Experience</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/experience.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+      }
+    }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.42/bundled/lenis.min.js"></script>
+</head>
+
+<body>
+    <a class="skip-link" href="#journey">Skip to experience</a>
+    <div class="loading-screen" id="loading" role="status" aria-live="polite" aria-atomic="true">
+        <div class="loader-ring"></div>
+        <h2>SECURECORE / SECURITY ENVIRONMENT</h2>
+        <p id="loading-text">Loading 3D security room...</p>
+    </div>
+
+    <canvas id="cyber-scene" aria-hidden="true"></canvas>
+
+    <header class="topbar">
+        <a href="{{ url_for('main.home') }}" class="logo" aria-label="SECURECORE homepage">
+            <span class="logo-mark" aria-hidden="true">S</span>
+            <span>SECURE<span class="logo-accent">CORE</span></span>
+        </a>
+        <div class="topbar-right">
+            <span class="top-status"><span class="status-dot"></span> 3D EXPERIENCE</span>
+            {% if is_admin %}
+                <a class="admin-panel-link" href="{{ url_for('main.admin_dashboard') }}"
+                   aria-label="Admin Control Panel">
+                    <span class="admin-panel-prompt" aria-hidden="true">&gt;_</span>
+                    <span class="admin-panel-label">Admin Control Panel</span>
+                </a>
+            {% endif %}
+            <a class="home-link" href="{{ url_for('main.home') }}">Back to homepage <span aria-hidden="true">↗</span></a>
+        </div>
+    </header>
+
+    <main class="journey" id="journey">
+
+        <section class="scene-section hero-section">
+            <div class="scene-content">
+                <span class="eyebrow"><span class="scene-marker">01</span> SECURITY ENVIRONMENT</span>
+                <h1>Inside the<br><span>Security Room.</span></h1>
+                <p>
+                    Every digital defense begins with a secure
+                    environment. Scroll to explore.
+                </p>
+                <div class="scroll-hint">SCROLL TO EXPLORE ↓</div>
+            </div>
+        </section>
+
+        <section class="scene-section computer-section">
+            <div class="scene-content right-content">
+                <span class="eyebrow"><span class="scene-marker">02</span> AUTHENTICATION</span>
+                <h1>Every Login<br><span>Matters.</span></h1>
+                <p>
+                    Move closer to the computer and discover
+                    how secure authentication works.
+                </p>
+            </div>
+        </section>
+
+        <section class="scene-section digital-section">
+            <div class="scene-content">
+                <span class="eyebrow"><span class="scene-marker">03</span> DIGITAL SECURITY</span>
+                <h1>Enter the<br><span>Digital World.</span></h1>
+                <p>
+                    Password protection, encryption and
+                    multi-factor authentication.
+                </p>
+            </div>
+        </section>
+
+        <section class="scene-section final-section">
+            <div class="scene-content">
+                <span class="eyebrow"><span class="scene-marker">04</span> SECURITY SIMULATOR</span>
+                <h1>Understand.<br><span>Defend. Protect.</span></h1>
+                <p>
+                    Continue exploring the SECURECORE project
+                    and its authentication security concepts.
+                </p>
+                <a href="{{ url_for('main.home') }}" class="launch-button">BACK TO SECURECORE HOME <span aria-hidden="true">↗</span></a>
+            </div>
+        </section>
+
+    </main>
+
+    <div class="progress-track">
+        <div id="progress-bar"></div>
+    </div>
+
+    <script type="module"
+            src="{{ url_for('static', filename='js/experience.js') }}"></script>
+</body>
+</html>

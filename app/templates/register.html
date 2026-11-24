@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Create a SECURECORE learning account.">
+    <title>Create account | SECURECORE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="auth-page">
+    <main class="auth-shell">
+        <a class="brand" href="{{ url_for('main.home') }}" aria-label="SECURECORE home">
+            <span class="brand-mark" aria-hidden="true">S</span>
+            <span>SECURE<span class="brand-accent">CORE</span></span>
+        </a>
+        <section class="auth-card" aria-labelledby="register-title">
+            <div class="auth-kicker"><span class="status-dot" aria-hidden="true"></span> ACCOUNT REGISTRATION</div>
+            <h1 id="register-title">Create your account.</h1>
+            <p class="auth-intro">Set up an account to explore the authentication simulator.</p>
+
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="auth-messages">
+                        {% for category, message in messages %}
+                            <p class="auth-message auth-message-{{ category }}"
+                               role="{{ 'alert' if category == 'error' else 'status' }}">{{ message }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            <form class="auth-form" method="post" action="{{ url_for('main.register') }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="auth-field">
+                    <label for="username">Username</label>
+                    <input id="username" name="username" type="text" required
+                           minlength="3" maxlength="32" pattern="[A-Za-z0-9_]{3,32}"
+                           autocomplete="username" value="{{ username }}">
+                </div>
+                <div class="auth-field">
+                    <label for="email">Email address</label>
+                    <input id="email" name="email" type="email" required maxlength="254"
+                           autocomplete="email" value="{{ email }}">
+                </div>
+                <div class="auth-field">
+                    <label for="password">Password</label>
+                    <div class="password-input-wrap">
+                        <input id="password" name="password" type="password" required
+                               minlength="12" maxlength="128" autocomplete="new-password"
+                               aria-describedby="password-guidance">
+                        <button class="password-toggle" type="button" data-password-toggle
+                                aria-controls="password" aria-label="Show password" aria-pressed="false">Show</button>
+                    </div>
+                    <small class="field-guidance" id="password-guidance">Use at least 12 characters. Avoid reusing a password from another account.</small>
+                </div>
+                <div class="auth-field">
+                    <label for="password_confirmation">Confirm password</label>
+                    <div class="password-input-wrap">
+                        <input id="password_confirmation" name="password_confirmation"
+                               type="password" required minlength="12" maxlength="128"
+                               autocomplete="new-password">
+                        <button class="password-toggle" type="button" data-password-toggle
+                                aria-controls="password_confirmation" aria-label="Show password"
+                                aria-pressed="false">Show</button>
+                    </div>
+                </div>
+                <button class="button button-primary auth-submit" type="submit">Create account</button>
+            </form>
+
+            <p class="auth-switch">Already registered? <a href="{{ url_for('main.login') }}">Sign in</a></p>
+        </section>
+        <a class="auth-home" href="{{ url_for('main.home') }}">Return to SECURECORE</a>
+    </main>
+    <script src="{{ url_for('static', filename='js/auth.js') }}" defer></script>
+</body>
+</html>

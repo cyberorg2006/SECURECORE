@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SECURECORE administrator authentication terminal.">
+    <title>Admin terminal | SECURECORE</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin_terminal.css') }}">
+</head>
+<body class="terminal-page"
+      data-terminal-state="{{ terminal_state }}"
+      data-home-url="{{ url_for('main.home') }}"
+      data-success-url="{{ url_for('main.experience') }}">
+    <main class="terminal-shell">
+        <a class="terminal-brand" href="{{ url_for('main.home') }}" aria-label="SECURECORE home">
+            <span class="terminal-brand-mark" aria-hidden="true">S</span>
+            <span>SECURECORE <span class="terminal-brand-divider">/</span> ADMIN TERMINAL</span>
+        </a>
+
+        <section class="terminal-window" aria-labelledby="terminal-title">
+            <header class="terminal-window-header">
+                <span class="terminal-lights" aria-hidden="true"><i></i><i></i><i></i></span>
+                <span>SECURECORE · AUTHENTICATION CONSOLE</span>
+                <span class="terminal-mode">LOCAL DEMO</span>
+            </header>
+
+            <div class="terminal-content">
+                <p class="terminal-tagline">Understand. Defend. Protect.</p>
+                <h1 id="terminal-title">AI ADMIN TERMINAL</h1>
+
+                {% if terminal_state == "login" %}
+                    <div class="terminal-boot" aria-label="Terminal initialization">
+                        <p class="terminal-boot-line">SECURECORE AUTHENTICATION SERVICE</p>
+                        <p class="terminal-boot-line">Initializing protected admin session...</p>
+                        <p class="terminal-boot-line terminal-ready">Identity verification required.</p>
+                    </div>
+                    <form class="terminal-form" method="post" action="{{ url_for('main.login') }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <input type="hidden" name="login_context" value="admin">
+                        <div class="terminal-field">
+                            <label for="admin-username">Username</label>
+                            <div class="terminal-input-wrap">
+                                <span aria-hidden="true">&gt;</span>
+                                <input id="admin-username" name="username" type="text"
+                                       required maxlength="32" autocomplete="username"
+                                       autocapitalize="none" spellcheck="false">
+                            </div>
+                        </div>
+                        <div class="terminal-field">
+                            <label for="admin-password">Password</label>
+                            <div class="terminal-input-wrap">
+                                <span aria-hidden="true">&gt;</span>
+                                <input id="admin-password" name="password" type="password"
+                                       required maxlength="128" autocomplete="current-password">
+                            </div>
+                        </div>
+                        <button class="terminal-submit" type="submit">
+                            <span>Authenticate</span><span aria-hidden="true">↵</span>
+                        </button>
+                    </form>
+                    <p class="terminal-footnote">Local demo credentials are not valid for production deployments.</p>
+                {% elif terminal_state == "failure" %}
+                    <div class="terminal-result terminal-result-failure" role="alert" aria-live="assertive">
+                        <p>WARNING: SECURITY BREACH DETECTED</p>
+                        <p>ACCESS DENIED</p>
+                        <p>INVALID CREDENTIALS</p>
+                        <p>UNAUTHORIZED ACCESS ATTEMPT RECORDED</p>
+                    </div>
+                    <p class="terminal-disclaimer">
+                        This alert is triggered by a rejected sign-in; it is not confirmation of a compromise.
+                    </p>
+                    <a class="terminal-fallback-link" href="{{ url_for('main.home') }}">Return to homepage</a>
+                {% elif terminal_state == "success" %}
+                    <div class="terminal-result terminal-result-success" role="status" aria-live="polite">
+                        <p>AUTHENTICATION SUCCESSFUL</p>
+                        <p>ADMIN ACCESS GRANTED</p>
+                        <p>SECURECORE SYSTEM ONLINE</p>
+                    </div>
+                    <a class="terminal-fallback-link" href="{{ url_for('main.experience') }}">Enter the 3D Security Room</a>
+                {% else %}
+                    <div class="terminal-result terminal-result-failure" role="alert">
+                        <p>AUTHENTICATION SERVICE UNAVAILABLE</p>
+                        <p>PLEASE TRY AGAIN LATER</p>
+                    </div>
+                    <a class="terminal-fallback-link" href="{{ url_for('main.home') }}">Return to homepage</a>
+                {% endif %}
+                <span class="terminal-cursor" aria-hidden="true"></span>
+            </div>
+        </section>
+
+        <footer class="terminal-footer">
+            <span>SECURECORE · ADMIN ACCESS</span>
+            <a href="{{ url_for('main.home') }}">Exit terminal</a>
+        </footer>
+    </main>
+    <script src="{{ url_for('static', filename='js/admin_terminal.js') }}" defer></script>
+</body>
+</html>

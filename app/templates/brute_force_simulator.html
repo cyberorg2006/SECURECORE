@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A local mock demonstration of authentication defenses.">
+    <title>Brute-force defense simulator | SECURECORE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="auth-page">
+    <main class="auth-shell simulator-shell">
+        <a class="brand" href="{{ url_for('main.home') }}" aria-label="SECURECORE home">
+            <span class="brand-mark" aria-hidden="true">S</span>
+            <span>SECURE<span class="brand-accent">CORE</span></span>
+        </a>
+        <section class="auth-card simulator-card" aria-labelledby="simulator-title">
+            <div class="auth-kicker"><span class="status-dot" aria-hidden="true"></span> LOCAL MOCK SIMULATION</div>
+            <h1 id="simulator-title">See the defenses respond.</h1>
+            <p class="auth-intro">
+                Compare how a bounded set of synthetic guesses behaves against
+                four mock authentication controls.
+            </p>
+
+            <div class="auth-message simulator-safety-note" role="note">
+                This page uses an isolated mock account only. It never submits
+                credentials to real login routes or external systems. At most
+                {{ max_attempts }} synthetic attempts are simulated per run.
+            </div>
+
+            <form class="auth-form simulator-form"
+                  data-simulator-form
+                  data-endpoint="{{ url_for('main.run_brute_force_simulation') }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="simulator-controls">
+                    <div class="auth-field">
+                        <label for="attempt-count">Synthetic attempts (1-{{ max_attempts }})</label>
+                        <input id="attempt-count" name="attempt_count" type="number"
+                               min="1" max="{{ max_attempts }}" value="12" required>
+                    </div>
+                    <div class="auth-field">
+                        <label for="scenario">Authentication control</label>
+                        <select id="scenario" name="scenario" required>
+                            <option value="unprotected">Unprotected mock</option>
+                            <option value="rate_limited">Rate-limited mock</option>
+                            <option value="lockout">Account lockout</option>
+                            <option value="mfa">MFA enabled</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="button button-primary auth-submit" type="submit"
+                        data-run-button>Run local simulation</button>
+            </form>
+
+            <p class="auth-message simulator-status" data-simulator-status
+               role="status" aria-live="polite">
+                Ready. One same-origin request will run the selected mock scenario.
+            </p>
+
+            <section class="simulator-results" aria-labelledby="results-title">
+                <h2 id="results-title">Simulation results</h2>
+                <div class="simulator-summary" aria-live="polite">
+                    <div><span data-summary="successful">0</span><small>Password matches</small></div>
+                    <div><span data-summary="failed">0</span><small>Failed guesses</small></div>
+                    <div><span data-summary="blocked">0</span><small>Blocked attempts</small></div>
+                    <div><span data-summary="completed">0</span><small>Mock logins completed</small></div>
+                </div>
+                <div class="simulator-table-wrap">
+                    <table class="simulator-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Attempt</th>
+                                <th scope="col">Synthetic input</th>
+                                <th scope="col">Result</th>
+                                <th scope="col">Control response</th>
+                            </tr>
+                        </thead>
+                        <tbody data-simulation-events>
+                            <tr>
+                                <td colspan="4">No simulation has run yet.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <p class="auth-switch">
+                <a href="{{ url_for('main.attack_vs_defence_dashboard') }}">View attack vs defence dashboard</a>
+                <span aria-hidden="true">·</span>
+                <a href="{{ url_for('main.home') }}">Return to SECURECORE</a>
+            </p>
+        </section>
+    </main>
+    <script src="{{ url_for('static', filename='js/brute_force_simulator.js') }}" defer></script>
+</body>
+</html>

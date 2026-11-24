@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Administrator view of recorded authentication and security events.">
+    <title>Security monitoring | SECURECORE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="auth-page security-monitor-page">
+    <main class="security-monitor-shell" data-security-monitor
+          data-endpoint="{{ dashboard_url }}">
+        <a class="brand security-monitor-brand" href="{{ url_for('main.home') }}"
+           aria-label="SECURECORE home">
+            <span class="brand-mark" aria-hidden="true">S</span>
+            <span>SECURE<span class="brand-accent">CORE</span></span>
+        </a>
+
+        <header class="security-monitor-header">
+            <div>
+                <div class="auth-kicker"><span class="status-dot" aria-hidden="true"></span> ADMINISTRATOR VIEW · REAL AUTHENTICATION DATA</div>
+                <h1>Security <span>monitor</span></h1>
+                <p>Recorded sign-ins, account protection events, and evidence-based alerts.</p>
+            </div>
+            <form class="security-monitor-filters" data-security-filters>
+                <label>
+                    From
+                    <input type="date" name="start_date" value="{{ default_start_date }}" required>
+                </label>
+                <label>
+                    To
+                    <input type="date" name="end_date" value="{{ default_end_date }}" required>
+                </label>
+                <label>
+                    Event type
+                    <select name="event_type">
+                        <option value="all">All event types</option>
+                        {% for item in event_types %}
+                            <option value="{{ item.value }}">{{ item.label }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+                <label>
+                    Severity
+                    <select name="severity">
+                        <option value="all">All severities</option>
+                        {% for severity in severities %}
+                            <option value="{{ severity }}">{{ severity|capitalize }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+                <button class="button button-primary" type="submit" data-filter-button>Apply filters</button>
+            </form>
+        </header>
+
+        <p class="security-monitor-status" data-monitor-status role="status" aria-live="polite">
+            Loading recorded security data…
+        </p>
+
+        <section class="security-metric-grid" aria-label="Authentication summary">
+            <article class="security-metric-card">
+                <span>Total registered users</span>
+                <strong data-stat="registered_users">0</strong>
+                <small>All accounts currently in the database</small>
+            </article>
+            <article class="security-metric-card monitoring-success">
+                <span>Successful logins</span>
+                <strong data-stat="successful_logins">0</strong>
+                <small>Within the selected date range</small>
+            </article>
+            <article class="security-metric-card monitoring-danger">
+                <span>Failed login attempts</span>
+                <strong data-stat="failed_login_attempts">0</strong>
+                <small>Includes recorded MFA verification failures</small>
+            </article>
+            <article class="security-metric-card monitoring-warning">
+                <span>Account lockouts</span>
+                <strong data-stat="account_lockout_events">0</strong>
+                <small>Recorded temporary lockout events</small>
+            </article>
+        </section>
+
+        <section class="security-mfa-grid" aria-label="Multi-factor authentication activity">
+            <article class="security-summary-card">
+                <span class="security-card-kicker">MFA CHALLENGES</span>
+                <strong data-stat="mfa_challenges">0</strong>
+                <small>Recorded challenges issued</small>
+            </article>
+            <article class="security-summary-card">
+                <span class="security-card-kicker">MFA FAILURES</span>
+                <strong class="monitoring-danger-text" data-stat="mfa_failed_verifications">0</strong>
+                <small>Invalid or expired verification codes</small>
+            </article>
+            <article class="security-summary-card">
+                <span class="security-card-kicker">MFA-ENABLED SIGN-INS</span>
+                <strong data-stat="mfa_enabled_account_logins">0</strong>
+                <small>Successful logins by currently MFA-enabled accounts</small>
+            </article>
+            <article class="security-summary-card">
+                <span class="security-card-kicker">MFA ENABLED</span>
+                <strong data-stat="mfa_enabled_events">0</strong>
+                <small>Recorded MFA enrollment events</small>
+            </article>
+        </section>
+
+        <section class="security-monitor-main-grid">
+            <article class="security-monitor-panel activity-panel">
+                <div class="security-panel-heading">
+                    <div>
+                        <span class="security-card-kicker">AUTHENTICATION ACTIVITY</span>
+                        <h2>Login timeline</h2>
+                    </div>
+                    <div class="security-chart-legend" aria-label="Timeline legend">
+                        <span data-series="successful_logins">Successful</span>
+                        <span data-series="failed_logins">Failed</span>
+                        <span data-series="lockouts">Lockouts</span>
+                        <span data-series="mfa_activity">MFA</span>
+                    </div>
+                </div>
+                <div class="security-timeline" data-security-timeline
+                     aria-label="Recorded login and security activity by day"></div>
+            </article>
+
+            <article class="security-monitor-panel alerts-panel">
+                <div class="security-panel-heading">
+                    <div>
+                        <span class="security-card-kicker">RISK DETECTION</span>
+                        <h2>Security alerts</h2>
+                    </div>
+                    <span class="security-count-pill" data-alert-count>0</span>
+                </div>
+                <p class="security-panel-note">
+                    Alerts are derived from recorded activity and are not written as security events.
+                </p>
+                <div class="security-alert-list" data-security-alerts></div>
+            </article>
+        </section>
+
+        <section class="security-monitor-panel security-events-panel">
+            <div class="security-panel-heading">
+                <div>
+                    <span class="security-card-kicker">AUDIT TRAIL</span>
+                    <h2>Recent security events</h2>
+                </div>
+                <span class="security-panel-note">Latest 100 matching recorded events</span>
+            </div>
+            <div class="security-events-wrap">
+                <table class="security-events-table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Time (UTC)</th>
+                            <th scope="col">Event</th>
+                            <th scope="col">Account</th>
+                            <th scope="col">Severity</th>
+                            <th scope="col">Details</th>
+                        </tr>
+                    </thead>
+                    <tbody data-security-events>
+                        <tr><td colspan="5">Loading recorded events…</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <p class="security-monitor-methodology">
+            Risk scores are deterministic indicators, not proof of compromise. A five-minute burst
+            groups records by account identifier without displaying unregistered identifiers; repeated
+            failures, successful activity in a failure burst, repeated MFA failures, and recorded lockouts
+            receive higher scores. The available records contain no IP, device, or location history, so
+            this dashboard does not infer geographic or device anomalies. Filters apply to the event and
+            alert lists; the selected date range also controls summary metrics and the timeline.
+        </p>
+        <footer class="security-monitor-footer">
+            <span data-monitor-updated>Waiting for first update</span>
+            <a href="{{ url_for('main.dashboard') }}">Return to account dashboard</a>
+        </footer>
+    </main>
+    <script src="{{ url_for('static', filename='js/security_monitoring.js') }}" defer></script>
+</body>
+</html>

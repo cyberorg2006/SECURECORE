@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Your SECURECORE account dashboard.">
+    <title>Account dashboard | SECURECORE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="auth-page">
+    <main class="auth-shell">
+        <a class="brand" href="{{ url_for('main.home') }}" aria-label="SECURECORE home">
+            <span class="brand-mark" aria-hidden="true">S</span>
+            <span>SECURE<span class="brand-accent">CORE</span></span>
+        </a>
+        <section class="auth-card account-card" aria-labelledby="dashboard-title">
+            <div class="auth-kicker"><span class="status-dot" aria-hidden="true"></span> ACCOUNT DASHBOARD</div>
+            <h1 id="dashboard-title">Welcome, {{ current_user.username }}.</h1>
+            <p class="auth-intro">You are signed in as {{ current_user.email }}.</p>
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="auth-messages" role="status" aria-live="polite">
+                        {% for category, message in messages %}
+                            <p class="auth-message auth-message-{{ category }}">{{ message }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+            <div class="account-session" role="status">
+                <span class="account-session-icon" aria-hidden="true">✓</span>
+                <span><small>SESSION STATUS</small><strong>Authenticated</strong></span>
+            </div>
+            <section class="account-security" aria-labelledby="account-security-title">
+                <div>
+                    <div class="dashboard-overline">ACCOUNT SECURITY</div>
+                    <h2 id="account-security-title">Multi-factor authentication</h2>
+                    <p>
+                        {% if current_user.mfa_enabled %}
+                            An authenticator app is connected to your account.
+                        {% else %}
+                            Add an authenticator app as another layer of sign-in protection.
+                        {% endif %}
+                    </p>
+                </div>
+                <span class="account-security-state{% if not current_user.mfa_enabled %} account-security-state-pending{% endif %}">
+                    {{ "Enabled" if current_user.mfa_enabled else "Not enabled" }}
+                </span>
+                {% if not current_user.mfa_enabled %}
+                    <a class="button button-outline account-mfa-action" href="{{ url_for('main.mfa_setup') }}">Set up MFA <span aria-hidden="true">→</span></a>
+                {% endif %}
+            </section>
+            <nav class="account-actions" aria-label="SECURECORE destinations">
+                <a href="{{ url_for('main.experience') }}"><span>Explore the security room</span><span aria-hidden="true">↗</span></a>
+                {% if config.BRUTE_FORCE_SIMULATOR_ENABLED %}
+                    <a href="{{ url_for('main.brute_force_simulator') }}"><span>Run a local simulation</span><span aria-hidden="true">↗</span></a>
+                    <a href="{{ url_for('main.attack_vs_defence_dashboard') }}"><span>View simulation dashboard</span><span aria-hidden="true">↗</span></a>
+                {% endif %}
+                {% if current_user.is_admin or current_user.id in config.SECURITY_DASHBOARD_ADMIN_IDS %}
+                    <a href="{{ url_for('main.security_monitoring_dashboard') }}"><span>Open security monitoring</span><span aria-hidden="true">↗</span></a>
+                {% endif %}
+            </nav>
+            <form method="post" action="{{ url_for('main.logout') }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button class="button button-primary auth-submit" type="submit">Sign out</button>
+            </form>
+            <p class="auth-switch"><a href="{{ url_for('main.home') }}">Return to SECURECORE home</a></p>
+        </section>
+    </main>
+</body>
+</html>
