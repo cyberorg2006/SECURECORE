@@ -1,70 +1,63 @@
-# SECURECORE
 # 🛡️ SECURECORE
 
-### Secure Authentication • Cybersecurity Simulation • Security Monitoring
+### Secure Authentication · Cybersecurity Simulation · Security Monitoring
 
-\<p align="center">
-&#x20; \<a href="[https://securecore.onrender.com/](https://securecore.onrender.com/)">
-&#x20;   \<img src="[https://img.shields.io/badge/LIVE_DEMO-Visit_SECURECORE-B8FF65?style=for-the-badge&logo=render&logoColor=black](https://img.shields.io/badge/LIVE_DEMO-Visit_SECURECORE-B8FF65?style=for-the-badge\&logo=render\&logoColor=black)" alt="Live Demo">
-&#x20; \</a>
-&#x20; \<a href="[https://github.com/cyberorg2006/SECURECORE](https://github.com/cyberorg2006/SECURECORE)">
-&#x20;   \<img src="[https://img.shields.io/badge/GitHub-Source_Code-181717?style=for-the-badge&logo=github](https://img.shields.io/badge/GitHub-Source_Code-181717?style=for-the-badge\&logo=github)" alt="GitHub Repository">
-&#x20; \</a>
-\</p>
+<p align="center">
+  <a href="https://securecore.onrender.com/">
+    <img src="https://img.shields.io/badge/🚀_LIVE_DEMO-Visit_SECURECORE-B8FF65?style=for-the-badge&logo=render&logoColor=black" alt="Live Demo">
+  </a>
+  <a href="https://github.com/cyberorg2006/SECURECORE">
+    <img src="https://img.shields.io/badge/GitHub-Source_Code-181717?style=for-the-badge&logo=github" alt="GitHub Repository">
+  </a>
+</p>
 
-\<p align="center">
-&#x20; \<strong>A hands-on cybersecurity project focused on secure authentication, attack simulation, and security monitoring.\</strong>
-\</p>
+<p align="center">
+  A hands-on cybersecurity project focused on secure authentication, controlled attack simulation, and security monitoring.
+</p>
 
 ---
 
 ## 🚀 Live Demo
 
-**Explore SECURECORE:** [https://securecore.onrender.com/](https://securecore.onrender.com/)
+**Explore SECURECORE:** https://securecore.onrender.com/
 
-> The application is hosted on Render's free tier. It may take a little time to start after being inactive.
+> Note: The application is hosted on Render's free tier. It may take a little time to start after being inactive.
 
 ## 📌 About the Project
 
-SECURECORE is a web-based secure login and cybersecurity simulation platform built with Python and Flask.
+SECURECORE is a web-based secure login and cybersecurity simulation platform built to demonstrate authentication security, attack prevention, and security monitoring.
 
-It demonstrates how authentication security works and provides an interactive environment to explore simulated attacks, defensive mechanisms, and security events.
-
-The project combines backend security concepts with a modern dashboard and an interactive 3D security-room experience.
+It provides a practical environment to understand how authentication systems protect user accounts and respond to suspicious login activity.
 
 ## ✨ Key Features
 
-| Feature                        | Description                                       |
-| ------------------------------ | ------------------------------------------------- |
-| 🔐 Secure Authentication       | User registration, login, and logout              |
-| 🔑 Password Protection         | Argon2id password hashing                         |
-| 📱 Multi-Factor Authentication | TOTP-based MFA verification                       |
-| 🛑 Brute-Force Simulation      | Bounded, controlled attack simulation             |
-| ⏱️ Account Protection          | Rate limiting and temporary lockout               |
-| 📊 Security Monitoring         | View and inspect security events                  |
-| ⚔️ Attack vs Defence           | Explore simulated attacks and defensive responses |
-| 🖥️ Admin Dashboard            | Administrative security overview                  |
-| 🎮 3D Security Room            | Interactive 3D project experience                 |
+| Feature | Description |
+|---|---|
+| 🔐 Secure Authentication | User registration, login, and logout |
+| 🔑 Argon2id Password Hashing | Secure password hashing |
+| 📱 Multi-Factor Authentication | TOTP-based MFA |
+| 🛡️ Brute-Force Simulation | Controlled, bounded mock attack scenarios |
+| 🚨 Account Protection | Rate limiting and temporary account lockout |
+| 📊 Security Monitoring | Login activity and security event monitoring |
+| ⚔️ Attack vs Defence | Visual security simulation dashboard |
+| 🖥️ Admin Terminal | Administrative security interface |
+| 🎮 3D Security Experience | Interactive 3D security-room experience |
 
 ## 🧰 Technology Stack
 
 **Backend**
-
 - Python
 - Flask
 - Flask-SQLAlchemy
 - Flask-Limiter
 
 **Security**
-
 - Argon2id
-- TOTP / PyOTP
+- PyOTP (TOTP MFA)
 - CSRF protection
-- Session security
-- Rate limiting
+- Redis rate-limit storage
 
 **Frontend**
-
 - HTML5
 - CSS3
 - JavaScript
@@ -72,7 +65,6 @@ The project combines backend security concepts with a modern dashboard and an in
 - GSAP
 
 **Database & Deployment**
-
 - SQLite
 - Redis
 - Gunicorn
@@ -88,6 +80,7 @@ SECURECORE/
 │   │   ├── css/
 │   │   ├── js/
 │   │   └── model/
+│   │
 │   ├── templates/
 │   ├── __init__.py
 │   ├── extensions.py
@@ -95,11 +88,12 @@ SECURECORE/
 │   └── routes.py
 │
 ├── tests/
+│   └── test_auth.py
+│
 ├── config.py
 ├── requirements.txt
 ├── run.py
 ├── .env.example
-├── .gitignore
 └── README.md
 ```
 
@@ -114,28 +108,37 @@ cd SECURECORE
 
 ### 2. Create a virtual environment
 
-**Windows PowerShell:**
+```bash
+python -m venv venv
+```
+
+### 3. Activate the environment (Windows PowerShell)
 
 ```powershell
-python -m venv venv
 .\venv\Scripts\Activate.ps1
 ```
 
-### 3. Install dependencies
+### 4. Install dependencies
 
-```powershell
+```bash
 pip install -r requirements.txt
 ```
 
-### 4. Configure environment variables
+### 5. Configure environment variables
 
-Create your local `.env` file using `.env.example` as a template.
-
-Set a secure `SECRET_KEY` and configure the other required settings for your environment. Never upload your real `.env` file or credentials to GitHub.
-
-### 5. Start the application
+Copy the example environment file:
 
 ```powershell
+Copy-Item .env.example .env
+```
+
+Open `.env` and configure the required values, including a strong, private `SECRET_KEY`.
+
+Never upload your real `.env` file or credentials to GitHub.
+
+### 6. Start the application
+
+```bash
 python run.py
 ```
 
@@ -153,33 +156,39 @@ Run the automated test suite:
 python -m unittest discover -s tests -v
 ```
 
+**Latest local test result:** 28 tests passed.
+
 ## 🔒 Security Notes
 
-- Passwords are stored using Argon2id hashing.
-- MFA uses time-based one-time passwords.
-- The brute-force simulator is designed for controlled local testing.
-- Do not use this demonstration application to store real user credentials or sensitive production data.
-- Keep secret keys and database credentials out of source control.
-- The hosted free-tier deployment may use temporary storage. Do not rely on it for permanent user data.
+- Passwords are hashed using Argon2id.
+- MFA uses time-based one-time passwords (TOTP).
+- Login attempts are protected using rate limiting.
+- CSRF protection is enabled.
+- Brute-force demonstrations use bounded mock scenarios.
+- Never use the public demo for real passwords or sensitive personal information.
 
-## 🗺️ Future Improvements
+> **Disclaimer:** SECURECORE is an educational cybersecurity project. Its attack simulations are intended for controlled demonstration and learning, not for attacking real accounts or systems.
 
-- Advanced security analytics
-- AI-assisted security event analysis
-- More authentication security tests
-- Improved dashboard visualizations
-- Additional defensive simulations
+## ☁️ Deployment
 
-*These are planned enhancements, not claims about currently implemented functionality.*
+SECURECORE is deployed using **Render**.
 
-## 👨‍💻 Project
+Live application: https://securecore.onrender.com/
 
-**SECURECORE** — A cybersecurity learning and portfolio project.
+The free hosting environment may sleep after inactivity. Its local SQLite storage is not intended for permanent production user data.
 
-- **Repository:** [https://github.com/cyberorg2006/SECURECORE](https://github.com/cyberorg2006/SECURECORE)
-- **Live Application:** [https://securecore.onrender.com/](https://securecore.onrender.com/)
+## 👨‍💻 Developer
+
+**P Manikanta**
+
+Cybersecurity Student | Aspiring Security Professional
+
+- GitHub: https://github.com/cyberorg2006
+- Project: https://github.com/cyberorg2006/SECURECORE
+- Live Demo: https://securecore.onrender.com/
 
 ---
 
-\<p align="center">   \<strong>SECURECORE — Understand. Simulate. Defend.\</strong> \</p>
-
+<p align="center">
+  <strong>🛡️ SECURECORE — Learn. Simulate. Secure.</strong>
+</p>
